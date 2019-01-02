@@ -86,6 +86,7 @@ button {
   color: transparent;
   background: var(--color-neutral-light);
   border-radius: 5px;
+  transition: background-color 300ms linear, color 1s linear; /* added by Taylor  10) Create CSS transitions for each letter in the phrase display as they are revealed. */
 }
 
 .space {

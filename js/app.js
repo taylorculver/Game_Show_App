@@ -4,10 +4,12 @@ const phrase = $('#phrase');
 let missed = 0;
 
 // 2) event listener to the “Start Game” button to hide the start screen overlay
-$("#overlay").click(function(){
-  $("#overlay").hide();
-  addPhraseToDisplay(getRandomPhraseArray(phrases))
-});
+function startGame() {
+	$("#overlay").click(function(){
+	  $("#overlay").hide();
+	  addPhraseToDisplay(getRandomPhraseArray(phrases));
+	});
+};
 
 // 3) phrases array that contains at least 5 different phrases as strings
 const phrases = [
@@ -57,7 +59,8 @@ function checkLetter (guessedLetter) {
 			// If there’s a match, the function should add the “show” class to the list item containing that letter
 			$(this).attr({class: 'letter show'}).text(letter)
 			// store the matching letter inside of a variable, 
-			matchedLetter.push(letter)
+			matchedLetter.push(letter);
+			guesses.push(letter);
 		}
 	})
 	// and return that letter.
@@ -70,6 +73,27 @@ function checkLetter (guessedLetter) {
 	}
 };
 
+// 9) Each time the player guesses a letter, check whether the game has been won or lost. 
+function checkWin() {
+	// check if the number of letters with class “show” is equal to the number of letters with class “letters”. 
+	let test = $('.letter').length === $('.show').length;
+	// If they’re equal, 
+	if (test === true) {
+		// show the overlay screen with the “win” class and appropriate text. 
+		$("#overlay").attr({class: 'win'}).append($('<a/>'), 'You win!');
+		$("#overlay").show();
+		restartGame();
+	// Otherwise, if the number of misses is equal to or greater than 5,
+	} else if (missed >= 5) {
+		// show the overlay screen with the “lose” class and appropriate text
+		$("#overlay").attr({class: 'lose'}).append($('<a/>'), 'You lose!');
+		$("#overlay").show()
+		restartGame();
+	} 
+}
+
+startGame()
+
 // 7) Event delegation to listen only to button events from the keyboard
 $("#qwerty button").click(function(){
   // add the “chosen” class to that button so the same letter can’t be chosen twice
@@ -80,15 +104,18 @@ $("#qwerty button").click(function(){
   // 8) Count the missed guesses in the game
 	// If the checkLetter function returns a null value
 	if (letterFound === null) {
+		missed++;
 		// remove one of the tries from the scoreboard
-		missed++
+		$('#scoreboard .tries').first().remove();
 	}
+	checkWin();
 });
 
-
-// 9) Create a checkWin function.
-
-
-
-
-
+// 11) event listener to the Restart Game” button to hide the start screen overlay
+function restartGame() {
+	$("#overlay").click(function(){
+	  location.reload();
+	  $("#overlay").hide();
+	  addPhraseToDisplay(getRandomPhraseArray(phrases));
+	});
+};
