@@ -2,6 +2,7 @@
 const querty = $('#querty');
 const phrase = $('#phrase');
 let missed = 0;
+let guesses = [];
 
 // 2) event listener to the “Start Game” button to hide the start screen overlay
 function startGame() {
@@ -97,7 +98,7 @@ startGame()
 // 7) Event delegation to listen only to button events from the keyboard
 $("#qwerty button").click(function(){
   // add the “chosen” class to that button so the same letter can’t be chosen twice
-  $(this).attr({class: 'chosen'});
+  $(this).attr({class: 'chosen', "disabled": true});
   // Pass the button to the checkLetter function, and store the letter returned inside of a variable called letterFound.
   let letterFound = checkLetter($(this).text());
   // console.log(letterFound)
